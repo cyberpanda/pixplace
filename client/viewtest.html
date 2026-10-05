@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
+<meta name="robots" content="noindex,nofollow">
+<title>Pixplace – viewtest</title>
+<link rel="stylesheet" href="/viewtest.css">
+<style>
+:root{--bg:#08070c;--panel:#171320;--panel-2:#1e1a2a;--panel-3:#262034;
+ --line:#2a2336;--ink:#f1ecfb;--dim:#a89dc0;--faint:#746a8c;
+ --accent:#a855f7;--accent-2:#c77dff}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);
+ font:15px/1.5 'Inter',system-ui,Segoe UI,sans-serif;overflow:hidden}
+.demo-row{display:flex;align-items:center;gap:8px;padding:7px 4px;
+ border-bottom:1px solid var(--line);font-size:13px}
+.demo-row:last-child{border-bottom:0}
+.demo-thumb{width:34px;height:24px;flex:none;border-radius:5px;
+ background:linear-gradient(135deg,#7c3aed,#c77dff)}
+.demo-row .cnt{margin-left:auto;color:var(--faint)}
+</style>
+</head>
+<body>
+<script>try{if(localStorage.pp_theme==="apple")document.body.classList.add("theme-apple");if(localStorage.pp_theme_auto==="1")document.body.classList.add("theme-auto");}catch(e){}</script>
+<script src="/viewtest.js"></script>
+<script>
+(function(){
+  ViewTest.mount();
+  var rooms=["Plaza","Studio","Gallery","Cinema","Lobby","Lounge","Garden","Cafe"];
+  var users=["Panda","Nova","Kiko","RetroBot","Mira"];
+  function fill(id,html){var b=ViewTest.body(id);if(b)b.innerHTML=html;}
+  fill("rooms",rooms.map(function(n,i){
+    return '<div class="demo-row"><span class="demo-thumb"></span>'
+      +'<span>'+n+'</span><span class="cnt">'+(i%4)+'</span></div>';}).join(""));
+  fill("users",users.map(function(n){
+    return '<div class="demo-row"><span class="demo-thumb" '
+      +'style="border-radius:50%;width:24px"></span><span>'+n+'</span></div>';
+  }).join(""));
+  var lines=[];
+  for(var i=1;i<=30;i++)lines.push('<div class="demo-row">'
+    +'<span style="color:var(--faint)">12:'+(i<10?"0":"")+i+'</span>'
+    +'<span>Test message number '+i+'</span></div>');
+  fill("log",lines.join(""));
+  fill("bag",'<div class="demo-row"><span class="demo-thumb"></span>'
+    +'<span>Noch leer</span></div>');
+  var cv=document.getElementById("vt-stage");
+  function paint(){
+    var x=cv.getContext("2d");
+    var g=x.createLinearGradient(0,0,cv.width,cv.height);
+    g.addColorStop(0,"#1b2340");g.addColorStop(1,"#3a2358");
+    x.fillStyle=g;x.fillRect(0,0,cv.width,cv.height);
+    x.fillStyle="rgba(255,255,255,.35)";
+    x.font="600 22px system-ui";x.textAlign="center";
+    x.fillText(cv.width+" x "+cv.height,cv.width/2,cv.height/2);
+  }
+  paint();
+  var f=document.getElementById("vt-field");
+  document.querySelector("#vt-input button").addEventListener("click",function(){
+    if(!f.value.trim())return;
+    var b=ViewTest.body("log");
+    if(b){b.insertAdjacentHTML("beforeend",'<div class="demo-row">'
+      +'<span style="color:var(--faint)">jetzt</span><span>'
+      +f.value.replace(/[<>&]/g,"")+'</span></div>');b.scrollTop=b.scrollHeight;}
+    f.value="";
+  });
+  f.addEventListener("keydown",function(e){
+    if(e.key==="Enter")document.querySelector("#vt-input button").click();});
+  document.getElementById("vt-status").innerHTML=
+    '<span>Room: Lobby</span><span>Users: 5</span><span>viewtest</span>';
+})();
+</script>
+</body>
+</html>

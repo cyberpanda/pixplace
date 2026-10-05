@@ -1,0 +1,11 @@
+# Pixplace behind Caddy (automatic HTTPS + wss).
+#   1) Point your domain at this server (A/AAAA record).
+#   2) Replace chat.example.com with your domain.
+#   3) Start the server:  python3 server/server.py --host 127.0.0.1 --port 9998
+#   4) Start Caddy:       caddy run
+chat.example.com {
+    encode gzip
+    # WebSocket and HTTP share one upstream; X-Forwarded-For carries the real
+    # client IP (used for rate limits and bans).
+    reverse_proxy 127.0.0.1:9998
+}

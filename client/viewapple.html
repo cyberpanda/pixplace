@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="color-scheme" content="dark light">
+<title>Pixplace – Apple View</title>
+<link rel="stylesheet" href="/viewapple.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overscroll-behavior:none}
+body{background:#000;-webkit-text-size-adjust:100%}
+</style>
+</head>
+<body>
+<script src="/viewapple.js"></script>
+<script>
+(function(){
+  ViewApple.mount();
+  function row(html){return '<div class="va-row">'+html+'</div>';}
+  function fill(id,h){var b=ViewApple.body(id);if(b)b.innerHTML=h;}
+  var rooms=["Plaza","Studio","Gallery","Cinema","Lobby","Lounge","Garden","Cafe"];
+  fill("rooms",rooms.map(function(n,i){
+    return row('<span class="thumb"></span><span class="main">'
+      +'<span class="t">'+n+'</span></span>'
+      +'<span class="tail">'+(i%4)+'</span>');}).join(""));
+  fill("users",["Panda","Nova","Kiko","RetroBot","Mira"].map(function(n){
+    return row('<span class="thumb round"></span><span class="main">'
+      +'<span class="t">'+n+'</span><span class="s">online</span></span>');
+  }).join(""));
+  var l=[];
+  for(var i=1;i<=40;i++)l.push(row('<span class="main">'
+    +'<span class="t">Test message '+i+'</span>'
+    +'<span class="s">12:'+(i<10?"0":"")+i+'</span></span>'));
+  fill("log",l.join(""));
+  fill("bag",row('<span class="thumb"></span><span class="main">'
+    +'<span class="t">Noch leer</span></span>'));
+  ViewApple.status(["Lobby","5 users","Apple View"]);
+  ViewApple.setRoomTitle("Lobby");
+  var cv=document.getElementById("va-stage");
+  (function paint(){
+    var x=cv.getContext("2d");
+    var g=x.createLinearGradient(0,0,cv.width,cv.height);
+    g.addColorStop(0,"#0b1733");g.addColorStop(1,"#3a1f5c");
+    x.fillStyle=g;x.fillRect(0,0,cv.width,cv.height);
+    x.fillStyle="rgba(255,255,255,.3)";x.textAlign="center";
+    x.font="600 22px -apple-system,system-ui";
+    x.fillText(cv.width+" \u00d7 "+cv.height,cv.width/2,cv.height/2);
+  })();
+  var ta=document.getElementById("va-field");
+  document.getElementById("va-send").addEventListener("click",function(){
+    var v=ta.value.trim();if(!v)return;
+    var b=ViewApple.body("log");
+    if(b){b.insertAdjacentHTML("beforeend",row('<span class="main">'
+      +'<span class="t">'+v.replace(/[<>&]/g,"")+'</span>'
+      +'<span class="s">jetzt</span></span>'));
+      b.scrollTop=b.scrollHeight;}
+    ta.value="";ta.style.height="auto";
+    document.getElementById("va-send").disabled=true;
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+# systemd unit for Pixplace.
+# Install: /etc/systemd/system/pixplace.service, then
+#   sudo systemctl daemon-reload && sudo systemctl enable --now pixplace
+# The service listens on localhost only; put a TLS reverse proxy in front.
+[Unit]
+Description=Pixplace 2D chat server
+After=network.target
+
+[Service]
+Type=simple
+User=pixplace
+WorkingDirectory=/opt/pixplace/server
+Environment=PIXPLACE_DATA=/opt/pixplace/data
+ExecStart=/usr/bin/python3 /opt/pixplace/server/server.py --host 127.0.0.1 --port 9998
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/opt/pixplace
+
+[Install]
+WantedBy=multi-user.target
